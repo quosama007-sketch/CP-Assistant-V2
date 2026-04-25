@@ -129,9 +129,7 @@ export default function Home() {
               <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.3px" }}>
                 CP Field Assistant
               </div>
-              <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 1 }}>
-                Powered by OF
-              </div>
+
             </div>
             <div style={{ display: "flex", gap: 6 }}>
               <span style={{
@@ -171,7 +169,7 @@ export default function Home() {
               Identify any CP equipment.<br />Know exactly what to do.
             </h1>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", lineHeight: 1.6 }}>
-              Point your camera, get instant expert guidance.<br />Backed by Peabody's Control of Pipeline Corrosion.
+              Point your camera, get instant expert guidance.
             </p>
           </div>
         </div>
@@ -348,7 +346,7 @@ export default function Home() {
                 </div>
                 <div>
                   <div style={{ color: "#fff", fontSize: 15, fontWeight: 700 }}>Expert Analysis Ready</div>
-                  <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 11 }}>Based on Peabody's Control of Pipeline Corrosion.</div>
+
                 </div>
               </div>
 
@@ -465,18 +463,7 @@ export default function Home() {
           )}
         </main>
 
-        {/* ── FOOTER ── */}
-        <footer style={{
-          borderTop: "1px solid var(--border)",
-          background: "var(--surface)",
-          padding: "16px 20px",
-          textAlign: "center",
-        }}>
-          <div style={{ fontSize: 11, color: "var(--text3)", lineHeight: 1.6 }}>
-            CP Field Assistant · Peabody's Control of Pipeline Corrosion (2nd Ed.)<br />
-            NACE International · Powered by Google Gemini · Free to use
-          </div>
-        </footer>
+
       </div>
     </>
   );
