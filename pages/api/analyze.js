@@ -17,6 +17,12 @@ export const config = {
   api: { bodyParser: { sizeLimit: "10mb" } },
 };
 
+const MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000;
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -32,26 +38,53 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "GEMINI_API_KEY not configured. Add it in Vercel environment variables." });
   }
 
-  try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-    const result = await model.generateContent([
-      SYSTEM_PROMPT,
-      {
-        inlineData: {
-          mimeType: imageMime,
-          data: imageBase64,
-        },
-      },
-      "I am a fresher field technician. Please identify this CP equipment and tell me exactly what to do with it, step by step.",
-    ]);
+  const prompt = [
+    SYSTEM_PROMPT,
+    { inlineData: { mimeType: imageMime, data: imageBase64 } },
+    "I am a fresher field technician. Please identify this CP equipment and tell me exactly what to do with it, step by step.",
+  ];
 
-    const text = result.response.text();
-    return res.status(200).json({ result: text });
+  let lastError = null;
 
-  } catch (error) {
-    console.error("Gemini API error:", error);
-    return res.status(500).json({ error: error.message || "Analysis failed" });
+  // Try each model with retries
+  for (const modelName of MODELS) {
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
+        return res.status(200).json({ result: text });
+      } catch (error) {
+        lastError = error;
+        const is503 = error.message?.includes("503") || error.message?.includes("overloaded") || error.message?.includes("unavailable");
+        const is429 = error.message?.includes("429") || error.message?.includes("quota");
+
+        console.warn(`Model ${modelName} attempt ${attempt} failed:`, error.message);
+
+        if (is503 && attempt < MAX_RETRIES) {
+          // Wait and retry same model
+          await sleep(RETRY_DELAY * attempt);
+          continue;
+        }
+
+        if (is429) {
+          // Quota exceeded — try next model immediately
+          break;
+        }
+
+        if (!is503) {
+          // Unknown error — try next model
+          break;
+        }
+      }
+    }
   }
+
+  // All models and retries failed
+  console.error("All models failed:", lastError?.message);
+  return res.status(500).json({
+    error: "Google AI servers are busy right now. Please wait 10 seconds and try again.",
+  });
 }
