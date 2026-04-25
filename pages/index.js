@@ -130,7 +130,7 @@ export default function Home() {
                 CP Field Assistant
               </div>
               <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 1 }}>
-                Powered by Peabody's · NACE Standard
+                Powered by OF
               </div>
             </div>
             <div style={{ display: "flex", gap: 6 }}>
@@ -348,7 +348,7 @@ export default function Home() {
                 </div>
                 <div>
                   <div style={{ color: "#fff", fontSize: 15, fontWeight: 700 }}>Expert Analysis Ready</div>
-                  <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 11 }}>Based on Peabody's Control of Pipeline Corrosion, 2nd Ed.</div>
+                  <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 11 }}>Based on Peabody's Control of Pipeline Corrosion.</div>
                 </div>
               </div>
 
