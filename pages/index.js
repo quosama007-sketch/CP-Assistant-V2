@@ -166,7 +166,7 @@ export default function Home() {
               fontSize: 24, fontWeight: 800, color: "#fff",
               letterSpacing: "-0.5px", lineHeight: 1.25, marginBottom: 10,
             }}>
-              Identify any CP equipment.<br />Know exactly what to do.
+              CP Troubleshooting Guide
             </h1>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", lineHeight: 1.6 }}>
               Point your camera, get instant expert guidance.
